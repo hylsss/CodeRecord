@@ -6,30 +6,36 @@ C# 程序由一个或多个文件组成。 每个文件均包含零个或多个�
 using System;
 
 namespace c.biancheng.net {
-    class Rectangle {
+    class Rectangle 
+    {
         // 成员变量
         double length;
         double width;
       
         // 成员函数
-        public void Acceptdetails() {
+        public void Acceptdetails() 
+        {
             length = 4.5;  
             width = 3.5;
         }
       
-        public double GetArea() {
+        public double GetArea() 
+        {
             return length * width;
         }
       
-        public void Display() {
+        public void Display() 
+        {
             Console.WriteLine("Length: {0}", length);
             Console.WriteLine("Width: {0}", width);
             Console.WriteLine("Area: {0}", GetArea());
         }
  
     }
-    class ExecuteRectangle {
-        static void Main(string[] args) {
+    class ExecuteRectangle 
+    {
+        static void Main(string[] args)
+        {
             Rectangle r = new Rectangle();
             r.Acceptdetails();
             r.Display();
@@ -41,7 +47,7 @@ namespace c.biancheng.net {
 
 
 
-`using` 关键字用来在程序引入 `System` 命名空间
+`using` 关键字用来在程序引入 `System` 命名空间，一个程序一般又多个using语句。
 
 `namespace` 关键字用来声明一个命名空间，命名空间是用于组织代码的一种方式，以避免命名冲突。在这里，所有的类、结构、接口等都被放在了 `YourNamespace` 命名空间下，命名空间是类的集合。
 
@@ -108,4 +114,26 @@ namespace c.biancheng.net {
   Console.WriteLine(type.FullName);  // 输出：System.Int32
   ```
 
+
+
+### 方法
+
+-  GetMember(),GetMembers()
+
+  1. 返回MemberInfo类型，用于取得该类的所有成员的信息
+
+  2. GetConstructor(),GetConstructors() -返回ConstructorInfo类型，用于取得该类构造函数的信息
+
+-  GetPropeerty(),GetProperties()
+    返回ProperyInfo类型，用于取得该类的属性的信息
+
+-  GetMethod(),GetMethods()
+    返回MethodInfo类型，用于取得该类的方法的信息
+  
+-  GetField(),GetFields()
+    返回FieldInfo类型，用于取得该类的字段（成员变量）的信息
+
+## 
+
 这只是获取类型信息的基础。反射API提供了大量的方法和属性，允许你深入查询类型的各种信息，如其构造函数、属性、方法、事件、接口、泛型参数等。但请注意，频繁使用反射可能会影响性能，因此在性能关键的代码中应谨慎使用
+
