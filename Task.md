@@ -139,12 +139,14 @@ static void UseRunchronously()
 **Task.WaitAny(Task[] tasks) ** 表示只要有一个task执行完毕就解除阻塞;
 
 ```c#
- Task task1 = new Task(() => { 
+ Task task1 = new Task(() => 
+ { 
      Thread.Sleep(500); 
      Console.WriteLine("线程1执行完毕！"); 
  }); 
  task1.Start(); 
- Task task2 = new Task(() => { 
+ Task task2 = new Task(() => 
+ { 
      Thread.Sleep(1000); 
      Console.WriteLine("线程2执行完毕！"); 
  }); 
@@ -191,7 +193,7 @@ static void UseCancelTask()
         { 
             Thread.Sleep(1000); 
             Console.WriteLine($"第{++index}次执行，线程运行中..."); 
-          } 
+        } 
     }); 
     task1.Start(); 
     //延时取消，效果等同于Thread.Sleep(5000);source.Cancel(); 
