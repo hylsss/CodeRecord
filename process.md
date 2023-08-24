@@ -180,3 +180,6 @@ Task task3 = Task.Run(() =>
     Console.WriteLine($"hello, task3的线程ID为{ Thread.CurrentThread.ManagedThreadId}"); 
 }); 
 ```
+
+运行结果：
+![WechatIMG242](https://github.com/hylsss/CodeRecord/assets/62007319/c89c77a5-dcb9-431a-9c7e-21f60cd6a3d2)
