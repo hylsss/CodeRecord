@@ -192,6 +192,7 @@ Task task3 = Task.Run(() =>
 
 如果创建有返回值的**Task** 
 
+![WechatIMG243](https://github.com/hylsss/CodeRecord/assets/62007319/b035ba35-9798-40de-a609-7a8f16654a15)
 
 
 
