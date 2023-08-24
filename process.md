@@ -190,10 +190,12 @@ Task task3 = Task.Run(() =>
 
 先打印"执行主线程"，然后再打印各个任务，说明了**Task不会阻塞主线程**
 
-如果创建有返回值的**Task** 
 
-![WechatIMG243](https://github.com/hylsss/CodeRecord/assets/62007319/b035ba35-9798-40de-a609-7a8f16654a15)
+**如果创建有返回值的Task** 
 
+
+
+![WechatIMG243](https://github.com/hylsss/CodeRecord/assets/62007319/0ca37bac-048b-49c9-a09d-3e42e96d5a1d)
 
 
 
