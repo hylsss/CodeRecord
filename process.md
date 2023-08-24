@@ -183,3 +183,17 @@ Task task3 = Task.Run(() =>
 
 运行结果：
 ![WechatIMG242](https://github.com/hylsss/CodeRecord/assets/62007319/c89c77a5-dcb9-431a-9c7e-21f60cd6a3d2)
+
+
+
+
+
+先打印"执行主线程"，然后再打印各个任务，说明了**Task不会阻塞主线程**
+
+如果创建有返回值的**Task** 
+
+
+
+
+
+注意task.Resut获取结果时会阻塞线程，即如果task没有执行完成，会等待task执行完成获取到Result，然后再执行后边的代码
