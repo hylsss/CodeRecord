@@ -33,3 +33,150 @@ p1.Start();
 
 ```
 
+### 同步
+
+优点：代码简单
+
+缺点：串行执行，相互阻塞
+
+```c#
+public static void Standard()
+{
+    Work(1);
+    Work(2);
+}
+```
+
+
+
+### 异步
+
+异步的好处在于非阻塞(调用线程不会暂停执行去等待子线程完成)，因此我们把一些不需要立即使用结果、较耗时的任务设为异步执行，可以提高程序的运行效率。
+
+Task：表示一个异步操作
+
+优点：线程开销减少，异步方法内部可以使用外部变量
+
+```C#
+    public static void UseTask()
+    {
+        var id1 = 1;
+        var t1 = Task.Run(() =>
+        {
+            Work(id1);
+        });
+
+        var id2 = 2;
+        var t2 = Task.Run(() =>
+        {
+            Work(id2);
+        });
+    }
+```
+
+### 线程
+线程：创建和控制线程，设置其优先级并获取其状态。
+优点：可以并行
+缺点：开销大
+
+```c#
+//模拟高耗时任务
+public static void Work(int id)
+{
+    Console.WriteLine($"{id} Begin");
+    char[] chars = new char[4] { 'A', 'B', 'C', 'D' };
+    foreach (var item in chars)
+     {
+         Thread.Sleep(1000);
+         Console.WriteLine($"{id} {item}");
+      }
+      Console.WriteLine($"{id} End");
+    }
+
+public static void UserThread() 
+{
+   Thread t1 = new Thread(x => {
+       Work(1);
+    });
+   t1.Start();
+
+   Thread t2 = new Thread(x => {
+       Work(2);
+    });
+    t2.Start();
+}
+
+//2 A
+//1 A
+//1 B
+//2 B
+//1 C
+//2 C
+//1 D
+//1 End
+//2 D
+//2 End
+
+```
+
+
+
+## Task
+
+`Task` 是在 `ThreadPool` 的基础上推出的，我们简单了解下 `ThreadPool`。`ThreadPool` 中有若干数量的线程，如果有任务需要处理时，会从线程池中获取一个空闲的线程来执行任务，任务执行完毕后线程不会销毁，而是被线程池回收以供后续任务使用。当线程池中所有的线程都在忙碌时，又有新任务要处理时，线程池才会新建一个线程来处理该任务，如果线程数量达到设置的最大值，任务会排队，等待其他任务释放线程后再执行。线程池能减少线程的创建，节省开销，看一个ThreadPool的例子吧
+
+```c#
+static void UserThreadPool()
+{
+    for (int i = 1; i < 5; i++)
+    {
+        ThreadPool.QueueUserWorkItem(new WaitCallback((obj) =>
+        {
+            Console.WriteLine($"第{obj}个执行任务");
+        }), i);
+    }
+}
+
+
+//第4个执行任务
+//第2个执行任务
+//第1个执行任务
+//第3个执行任务
+
+
+```
+
+`ThreadPool `相对于 `Thread` 来说可以**减少线程的创建，有效减小系统开销**;但是 `ThreadPool` 不能控制线程的执行顺序，我们也**不能获取线程池内线程取消/异常/完成的通知**，即我们**不能有效监控和控制线程池中的线程。**
+
+### Task创建和执行
+
+1.  new方式实例化一个Task，需要通过Start方法启动 
+```c#
+Task task = new Task(() => 
+{ 
+    Thread.Sleep(100); 
+    Console.WriteLine($"hello, task1的线程ID为{Thread.CurrentThread.ManagedThreadId}"); 
+}); 
+task.Start();       
+
+```
+
+2. Task.Factory.StartNew(Action action)创建和启动一个Task 
+
+```c#
+ Task task2 = Task.Factory.StartNew(() => 
+{ 
+    Thread.Sleep(100); 
+    Console.WriteLine($"hello, task2的线程ID为{ Thread.CurrentThread.ManagedThreadId}");
+}); 
+```
+
+3. Task.Run(Action action)将任务放在线程池队列，返回并启动一个Task 
+
+```c#
+Task task3 = Task.Run(() => 
+{ 
+    Thread.Sleep(100); 
+    Console.WriteLine($"hello, task3的线程ID为{ Thread.CurrentThread.ManagedThreadId}"); 
+}); 
+```
