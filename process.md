@@ -35,15 +35,17 @@ public static void Work(int id)
 
 public static void UserThread() 
 {
-   Thread t1 = new Thread(x => {
+   Thread t1 = new Thread(x => 
+   {
        Work(1);
-    });
+   });
    t1.Start();
 
-   Thread t2 = new Thread(x => {
+   Thread t2 = new Thread(x => 
+   {
        Work(2);
-    });
-    t2.Start();
+   });
+   t2.Start();
 }
 
 //2 A
@@ -103,10 +105,7 @@ Task：表示一个异步操作
     }
 ```
 
-```c#
 
-
-```
 
 
 
