@@ -1,6 +1,6 @@
 ## ASP.NET.Core概述
 
-ASP.NET Core 是 Microsoft 推出的一个跨平台、高性能、开源的 Web 框架，用于构建现代化、云优化的 Internet 连接应用程序，如 Web 应用、API、以及即使是移动后端服务。相比传统的`ASP.NET`框架，只能在在` Windows `上运行不同,`ASP.NET Core`  可以在 `Windows`、`v` 和` Linux `上运行。
+ASP.NET Core 是 Microsoft 推出的一个跨平台、高性能、开源的 Web 框架，用于构建现代化、云优化的 Internet 连接应用程序，如 Web 应用、API、以及即使是移动后端服务。相比传统的`ASP.NET`框架，只能在` Windows `上运行不同,`ASP.NET Core`  可以在 `Windows`、`Mac` 和` Linux `上运行。
 
 ###  ASP.NET Core 的概念
 
