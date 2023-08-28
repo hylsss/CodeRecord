@@ -1,6 +1,6 @@
 ## c# 委托
 
-委托（Delegate）特别用于实现事件和回调方法。所有的委托（Delegate）都派生自** **System.Delegate** **类。
+委托（Delegate）特别用于实现事件和回调方法。所有的委托（Delegate）都派生自**System.Delegate**类。
 
 #### 声明委托（Delegate）
 
