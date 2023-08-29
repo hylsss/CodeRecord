@@ -57,6 +57,52 @@ public void AnotherMethod(string text, int number) { ... }
     // 打印一下实例化委托方法
 ```
 
+更好理解的demo
+
+```c#
+//委托声明
+public delegate void GreetingDelegate(string name);
+
+public class Program
+{
+    static void GreetingEnglish(string name)
+    {
+        Console.WriteLine("Good morning,"+name);
+    }
+
+    static void GreetingChinese(string name)
+    {
+         Console.WriteLine("早上好，"+name);
+    }
+   //委托 GreetingDelegate 和类型 string 的地位一样
+    static void GreetingLanguage(string name, GreetingDelegate GreetingLanguage)
+    {
+        GreetingLanguage(name);
+    }
+
+    static void Main(string[] args)
+    {
+        GreetingLanguage("Alina", GreetingEnglish);
+        GreetingLanguage("Alina", GreetingChinese);
+      
+      //可以将多个方法赋给同一个委托，或者叫将多个方法绑定到同一个委托，当调用这个委托的时候，将依次调用        其所绑定的方法
+        GreetingDelegate delegate1;
+        delegate1 = EnglishGreeting; 
+        delegate1 += ChineseGreeting;
+        GreetPeople("Liker", delegate1);
+        Console.ReadLine();
+      //可以绕过GreetingLanguage 方法，通过委托来直接调用GreetingChinese 和GreetingEnglish
+        GreetingDelegate delegate1;
+        delegate1 = EnglishGreeting;
+        delegate1 += ChineseGreeting; 
+        delegate1("Liker");
+        Console.ReadLine();
+    }
+}
+```
+
+
+
 #### 委托多播
 
 委托对象可使用 **"+" **运算符进行合并。一个合并委托调用它所合并的两个委托。只有相同类型的委托可被合并。**"-"** 运算符可用于从合并的委托中移除组件委托。可以创建一个委托被调用时要调用的方法的调用列表。这被称为委托的 **多播（multicasting）**，也叫组播。
@@ -89,4 +135,10 @@ public void AnotherMethod(string text, int number) { ... }
 //打印一下实例化委托方法WriteToScreen
 //打印一下实例化委托方法WriteToNum
 ```
+
+
+
+资料：
+
+ [c#委托与事件](https://www.cnblogs.com/SkySoot/archive/2012/04/05/2433639.html) 
 
