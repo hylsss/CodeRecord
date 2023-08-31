@@ -18,14 +18,10 @@ public class Startup
     }
 
     public IConfiguration Configuration { get; }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
     // 该方法由运行时调用，使用该方法向DI容器添加服务
     public void ConfigureServices(IServiceCollection services)
     {
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     // 该方法由运行时调用，使用该方法配置HTTP请求管道
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -37,7 +33,7 @@ public class Startup
 
 - 该方法是**可选**的
 - 该方法用于添加服务到DI容器中
-- 该方法**在`Configure`方法之前被调用**
+- 该方法在 **`Configure`方法之前被调用**
 - 该方法要么无参数，要么只能有一个参数且类型必须为`IServiceCollection`
 - 该方法内的代码大多是形如`Add{Service}`的扩展方法
 
@@ -56,7 +52,7 @@ public class Startup
 
 - 该方法是**必须**的
 - 该方法用于配置HTTP请求管道，通过向管道添加中间件，应用不同的响应方式。
-- 该方法**在`ConfigureServices`方法之后被调用**
+- 该方法在**`ConfigureServices`方法之后被调用**
 - 该方法中的参数可以接受任何已注入到DI容器中的服务
 - 该方法内的代码大多是形如`Use{Middleware}`的扩展方法
 - **该方法内中间件的注册顺序与代码的书写顺序是一致的，先注册的先执行，后注册的后执行**

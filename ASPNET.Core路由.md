@@ -51,7 +51,20 @@ app.UseEndpoints(endpoints =>
 -  路由按照它们出现的顺序进行评估，也就是我们注册它们的顺序，映射多个路由的情况相当普遍，特别是如果我们想在 URL 中使用不同的参数或者如果要在 URL 中使用不同的文字.
 
 ```c#
-[Route("api/[controller]/[action]")]
+[ApiController]
+[Route("")]  
+public class ProductController : ControllerBase
+{
+    [HttpGet]
+    public string GetProduct()  
+    {
+        return "product";
+    }
+}
+
+// localhost:port
+
+[Route("api/[controller]")]
 [ApiController]
 
 public class HomeController : ControllerBase
@@ -62,6 +75,20 @@ public class HomeController : ControllerBase
         return "hello world";
     }
 }
+// localhost:port/api/home
+
+[ApiController]
+[Route("api/[controller]/[action]")]  
+public class ProductController : ControllerBase
+{
+    [HttpGet]
+    public string GetProduct()  
+    {
+        return "product";
+    }
+}
+
+// localhost:port/api/product/getproduct
 ```
 
 
