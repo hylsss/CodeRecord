@@ -1,6 +1,6 @@
 ## ASP.NET.Core启动过程
 
-对于ASP.NET Core应用程序来说，我们要记住非常重要的一点是：其本质上是一个独立的控制台应用，它并不是必需在IIS内部托管且并不需要IIS来启动运行（而这正是ASP.NET Core跨平台的基石）。ASP.NET Core应用程序拥有一个内置的**Self-Hosted（自托管）**的**Web Server（Web服务器）**，用来处理外部请求。
+对于ASP.NET Core应用程序来说，我们要记住非常重要的一点是：其本质上是一个独立的控制台应用，它并不是必需在IIS内部托管且并不需要IIS来启动运行（而这正是ASP.NET Core跨平台的基石）。ASP.NET Core应用程序拥有一个内置的**Self-Hosted（自托管）的Web Server（Web服务器）**，用来处理外部请求。
 
 不管是托管还是自托管，都离不开**Host（宿主）**。在ASP.NET Core应用中通过配置并启动一个Host来完成应用程序的启动和其生命周期的管理（如下图所示）。而Host的主要的职责就是Web Server的配置和**Pilpeline（请求处理管道）**的构建。
 
