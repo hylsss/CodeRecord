@@ -10,6 +10,9 @@
 2. **Build()** ：IWebHostBuilder负责创建IWebHost
 3. **Run()** ：启动IWebHost
 
+![启动进程图](https://github.com/hylsss/CodeRecord/assets/62007319/2c0c5037-fab1-4a5f-b0fd-fcc231812a15)
+
+
 ```c#
  public class Program
  { 
