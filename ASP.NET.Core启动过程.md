@@ -32,3 +32,35 @@
              });
  }
 ```
+
+### 宿主构造器
+
+WebHost的创建，又可以划分为三个部分：
+
+1. 构建依赖注入容器，初始通用服务的注册：BuildCommonService();
+2. 实例化WebHost：var host = new WebHost(...);
+3. 初始化WebHost，也就是构建由中间件组成的请求处理管道：host.Initialize();
+
+
+
+### 注册初始通用服务
+
+`BuildBuildCommonService`方法主要做了两件事：
+
+1. 查找`HostingStartupAttribute`特性以应用其他程序集中的启动配置
+2. 注册通用服务
+3. 若配置了启动程序集，则发现并以`IStartup`类型注入到IOC容器中
+
+
+
+### 启动WebHost
+
+WebHost的启动主要分为两步：
+
+1. 再次确认请求管道正确创建
+2. 启动Server以监听请求
+3. 启动 HostedService
+
+
+
+## 启动Server
