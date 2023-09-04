@@ -205,7 +205,32 @@ var config = new MapperConfiguration(cfg => cfg.DisableConstructorMapping());
 
 #### 映射
 
-类型映射配置之后，集合的映射就自动完成了，集合之间可以相互映射。
+```c#
+public class Source  
+{  
+    public int Value { get; set; }  
+    public int Percent { get; set; }  
+}  
+  
+public class Destination  
+{  
+    public int Value { get; set; }  
+}
+
+var sources = new[]  
+{  
+    new Source { Value = 5, Percent = 50 },  
+    new Source { Value = 6, Percent = 50 },  
+    new Source { Value = 7, Percent = 50 }  
+};  
+  
+var iEnumerableDest = mapper.Map<Source[], IEnumerable<Destination>>(sources);  
+var iCollectionDest = mapper.Map<Source[], ICollection<Destination>>(sources);  
+var iListDest = mapper.Map<Source[], IList<Destination>>(sources);  
+var listDest = mapper.Map<Source[], List<Destination>>(sources);  
+var arrayDest = mapper.Map<Source[], Destination[]>(sources);
+```
+
 
 - `IEnumerable`
 
@@ -222,6 +247,8 @@ var config = new MapperConfiguration(cfg => cfg.DisableConstructorMapping());
 - `List<T>`
 
 - `Arrays`
+
+类型映射配置之后，集合的映射就自动完成了，集合之间可以相互映射。
 
 假如某个成员的名称为NameAAA，则名为NameAAA的field，与名为NameAAA的property，与名为GetNameAAA的方法，三者之间可以**自动相互映射**
 
