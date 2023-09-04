@@ -100,7 +100,7 @@ AutoMapper 也可以在指定的程序集中扫描从 `Profile` 继承的类，�
 
 默认情况下，`AutoMapper` 基于相同的字段名映射，并且是 **不区分大小写** 的。
 
-- `SourceMemberNamingConvention` 表示源类型命名规则**（蛇形命名法）**
+- `SourceMemberNamingConvention` 表示源类型命名规则 **（蛇形命名法）**
 
 - `DestinationMemberNamingConvention` 表示目标类型命名规则 **（驼峰命名法）**
 
