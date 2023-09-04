@@ -336,3 +336,17 @@ cfg.CreateMap<Order, OrderDto>()
 
 ```
 
+
+
+- `VO`(`View Object`)：视图对象，用于展示层，它的作用是把某个指定页面(或组件)的所有数据封装起来。
+- `DTO`(`Data Transfer Object`)：数据传输对象，泛指用于展示层与服务层之间的数据传输对象。
+- `DO`(`Domain Object`)：领域对象，就是从现实世界中抽象出来的有形或无形的业务实体。
+- `PO`(`Persistent Object`)：持久化对象，它跟持久层(通常是[关系型数据库](https://cloud.tencent.com/product/cdb-overview?from_column=20065&from=20065))的数据结构形成一一对应的映射关系，如果持久层是关系型[数据库](https://cloud.tencent.com/solution/database?from_column=20065&from=20065)，那么，数据表中的每个字段(或若干个)就对应`PO`的一个(或若干个)属性。
+- `DAO`(`Data Access Object`):数据访问对象，主要用来封装对数据库的操作。
+
+
+
+### 参考资料
+
+[映射框架AutoMapper](https://www.cnblogs.com/bigbox777/p/14414594.html)
+[AutoMapper](https://blog.csdn.net/liyou123456789/article/details/125222690?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522169379076516800197063596%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=169379076516800197063596&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-125222690-null-null.142^v93^insert_down1&utm_term=AutoMapper&spm=1018.2226.3001.4187)
