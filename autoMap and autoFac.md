@@ -73,6 +73,7 @@ var config = new MapperConfiguration(cfg =>
 {
   //将LoginMapping添加到MapperConfiguration的配置中
     cfg.AddProfile<LoginMapping>();
+   //或者cfg.AddProfile(new LoginMapping());
 });
 ```
 
@@ -124,7 +125,7 @@ AutoMapper 尝试映射每个公共属性/字段。以下配置将忽略字段�
 ```c#
 var config = new MapperConfiguration(cfg =>
 {
-	cfg.ShouldMapField = fi => false;
+	 cfg.ShouldMapField = fi => false;
 });
 ```
 
@@ -140,11 +141,30 @@ var config = new MapperConfiguration(cfg =>
 ##### 识别前缀和后缀
 
 ```c#
-var config = new MapperConfiguration(cfg =>
+var configuration = new MapperConfiguration(cfg =>
 {
-    cfg.RecognizePrefixes("My");
-    cfg.RecognizePostfixes("My");
-}
+    cfg.RecognizePrefixes("before");//前缀
+    cfg.RecognizePostfixes("after");//后缀
+    cfg.CreateMap<Src03,Dest03>();
+});
+var mapper = configuration.CreateMapper();
+var dest = mapper.Map<Dest03>(new Src03() { Nameafter = "zhangsan", beforeAge = 18 });
+
+```
+
+```c#
+cfg.ClearPrefixes();//清除所有前缀
+```
+
+##### 控制映射字段和属性范围
+
+```c#
+//ShouldMapField设置字段映射范围，ShouldMapProperty设置属性范围
+var configuration = new MapperConfiguration(cfg => {
+    cfg.ShouldMapField = fi => false;
+    cfg.ShouldMapProperty = pi => pi.GetMethod != null && (pi.GetMethod.IsPublic || pi.GetMethod.IsPrivate);
+});
+
 ```
 
 ##### 调用构造函数
@@ -173,7 +193,7 @@ public class CommodityDto
 }
 ```
 
-AutoMapper 会自动找到相应的构造函数调用。如果在构造函数中对参数做一些改变的话，其改变会反应在映射结果中。
+`AutoMapper` 会自动找到相应的构造函数调用。如果在构造函数中对参数做一些改变的话，其改变会反应在映射结果中。
 
 ##### 禁用构造函数映射：
 
@@ -181,5 +201,138 @@ AutoMapper 会自动找到相应的构造函数调用。如果在构造函数中
 
 ```c#
 var config = new MapperConfiguration(cfg => cfg.DisableConstructorMapping());
+```
+
+#### 映射
+
+类型映射配置之后，集合的映射就自动完成了，集合之间可以相互映射。
+
+- `IEnumerable`
+
+- `IEnumerable<T>`
+
+- `ICollection`
+
+- `ICollection<T>`
+
+- `IList`
+
+- `IList<T>`
+
+- `List<T>`
+
+- `Arrays`
+
+假如某个成员的名称为NameAAA，则名为NameAAA的field，与名为NameAAA的property，与名为GetNameAAA的方法，三者之间可以**自动相互映射**
+
+##### 字段相同的会自动映射
+
+```c#
+var configuration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<Dest01, Src01>();
+});
+var mapper = configuration.CreateMapper();
+var dest = mapper.Map<Dest01>(new Src01() { Name = "zhangsan", Age = 18 });
+
+```
+
+##### 字段不同要手动配置映射
+同一个字段的映射，后面的会覆盖前面的，不同的字段，没有做映射的，不会进行赋值
+
+```c#
+var configuration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<Src02, Dest02>()
+    .ForMember(dest => dest.NameDest, opt => opt.MapFrom(src => src.NameSrc));
+});
+var mapper = configuration.CreateMapper();
+var dest = mapper.Map<Dest02>(new Src02() { NameSrc = "zhangsan" });
+```
+
+#####  内部类嵌套类映射
+
+类内部嵌套一个类，需要将嵌套的类也进行映射
+
+```c#
+public class SrcOuter
+{
+    public string OutName { get; set; }
+    public int OutAge { get; set; }
+    public SrcInner Inner { get; set; }
+}
+public class SrcInner
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+public class DestOuter
+{
+    public string OutName { get; set; }
+    public int OutAge { get; set; }
+    public DestInner Inner { get; set; }
+}
+public class DestInner
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+var configuration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<SrcOuter, DestOuter>();
+    cfg.CreateMap<SrcInner, DestInner>();
+});
+var mapper = configuration.CreateMapper();
+var dest = mapper.Map<DestOuter>(new SrcOuter(){OutName = "zhangsan",OutAge = 18,Inner = new SrcInner() { Name = "lisi", Age = 20 }});
+
+```
+
+##### 条件映射
+
+符合某些条件时才映射Condition方法会在MapFrom方法后判断,PreCondition会在MapFrom前判断。
+
+```c#
+var configuration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<SrcCondition, DestCondition>()
+    //src.Name.Length>=3&&(src.Name+"XXX").Length >= 5 两个条件都满足才映射
+    .ForMember(dest => dest.Name, opt => opt.PreCondition(src => src.Name.Length >= 3))
+    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name + "XXX"))
+    .ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name.Length >= 5))
+    //src.Age <= 15&&src.Age * 3>=30 两个条件都满足才映射
+    .ForMember(dest => dest.Age, opt => opt.PreCondition(src => src.Age <= 15))
+    .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age * 3))
+    .ForMember(dest => dest.Age, opt => opt.Condition(src => src.Age >= 30));
+});
+var mapper = configuration.CreateMapper();
+var dest = mapper.Map<DestCondition>(new SrcCondition() { Name = "zhangsan", Age = 18 });
+
+```
+
+##### 空值处理
+
+```c#
+//给个默认值 
+cfg.CreateMap<Src01, Dest01>()
+    .ForMember(dest => dest.Name, opt => opt.NullSubstitute("XXX"));
+```
+
+##### 映射反转
+
+ReverseMap一般在Create[Map方法](https://so.csdn.net/so/search?q=Map方法&spm=1001.2101.3001.7020)或者ForMember等方法之后，相当于src和dest根据你自己的配置反向映射
+
+```c#
+cfg.CreateMap<Order, OrderDto>().ReverseMap();
+//等同于以下两句
+cfg.CreateMap<Order,OrderDto>();
+cfg.CreateMap<OrderDto,Order>();
+
+//反向映射可以用ForPath配置
+cfg.CreateMap<Order, OrderDto>()
+  .ForMember(d => d.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+  .ReverseMap()
+  .ForPath(s => s.Customer.Name, opt => opt.MapFrom(src => src.CustomerName));
+
 ```
 
