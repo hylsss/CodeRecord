@@ -205,6 +205,8 @@ var config = new MapperConfiguration(cfg => cfg.DisableConstructorMapping());
 
 #### 映射
 
+##### 数组和列表映射
+
 ```c#
 public class Source  
 {  
@@ -231,6 +233,7 @@ var listDest = mapper.Map<Source[], List<Destination>>(sources);
 var arrayDest = mapper.Map<Source[], Destination[]>(sources);
 ```
 
+支持的源集合类型包括：
 
 - `IEnumerable`
 
@@ -248,11 +251,9 @@ var arrayDest = mapper.Map<Source[], Destination[]>(sources);
 
 - `Arrays`
 
-类型映射配置之后，集合的映射就自动完成了，集合之间可以相互映射。
+##### 字段相同的会自动映射
 
 假如某个成员的名称为NameAAA，则名为NameAAA的field，与名为NameAAA的property，与名为GetNameAAA的方法，三者之间可以**自动相互映射**
-
-##### 字段相同的会自动映射
 
 ```c#
 var configuration = new MapperConfiguration(cfg =>
