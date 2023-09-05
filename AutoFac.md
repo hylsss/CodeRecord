@@ -3,7 +3,6 @@
 - Autofac是第三方IOC容器，是当前最流行的IOC容器。
 - 功能强大，比asp.netcore内置容器强大得多，支持属性注入和方法注入，支持AOP。
 - 官网地址：http://autofac.org/
-- 源码下载地址：https://github.com/autofac/Autofac
 
 
 1. Autofac是什么?<br/>
