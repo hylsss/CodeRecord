@@ -6,17 +6,18 @@
 - 源码下载地址：https://github.com/autofac/Autofac
 
 
-1. Autofac是什么?
+1. Autofac是什么?<br/>
    说到Autofac，我们就要首先了解依赖注入（Dependency Injection，简称DI）1.1节介绍。DI不是什么技术，而是一种设计模式，是用来降低计算机程序之间的耦合的。在.net平台，有很多依赖注入工具，比较于其他的IOC框架，如Spring.NET，Unity，Castle等等所包含的，Autofac是一款较为轻量级的、性能优异的、支持xml配置的依赖注入工具
-    - 依赖注入（DI）
-    DI是一种软件设计模式，用来允许我们开发松耦合代码。DI是一种很好的方式去减少软件模块之间的紧耦合关心。DI帮助更好的去管理软件中的功能更新和复杂度。DI的目的是让代码可维护。  **Dependency Injection 依赖注入**，将对象依赖的其他对象，通过注入的方式进行初始化。
-    - 控制反转（IOC）
-    　IOC控制反转模式是对DIP(依赖倒置原则)的一种实现。IOC指的是一种框架或运行时的编程风格，用来控制程序流程。   
-    　**Inversion of Control 控制反转**，将控制权进行反转，将本由自身控制的对象初始化交由外部IoC容器进行初始化；
+    - 依赖注入（DI）<br/>
+      DI是一种软件设计模式，用来允许我们开发松耦合代码。DI是一种很好的方式去减少软件模块之间的紧耦合关心。DI帮助更好的去管理软件中的功能更新和复杂度。DI的目的是让代码可维护。<br/>
+      **Dependency Injection 依赖注入**，将对象依赖的其他对象，通过注入的方式进行初始化。
+    - 控制反转（IOC）<br/>
+    IOC控制反转模式是对DIP(依赖倒置原则)的一种实现。IOC指的是一种框架或运行时的编程风格，用来控制程序流程。<br/>
+    **Inversion of Control 控制反转**，将控制权进行反转，将本由自身控制的对象初始化交由外部IoC容器进行初始化；
 
 **现在我们使用其他的IoC容器框架来替换默认的内置IoC，这里选择使用Autofac框架**
 
-.net core 2.x和3.x 使用Autofac注入方式不一样，针对.net core 3.x的使用。首先,我们需要从nuget引用相关的包`Autofac.Extensions.DependencyInjection`(这个包扩展了一些微软提供服务的类.来方便替换`Autofac`)
+.net core 2.x和3.x 使用`Autofac`注入方式不一样，针对.net core 3.x的使用。首先,我们需要从nuget引用相关的包`Autofac.Extensions.DependencyInjection`(这个包扩展了一些微软提供服务的类.来方便替换`Autofac`)
 
 ---
 
