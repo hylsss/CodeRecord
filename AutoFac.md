@@ -13,7 +13,7 @@
       **Dependency Injection 依赖注入**，将对象依赖的其他对象，通过注入的方式进行初始化。
     - 控制反转（IOC）<br/>
     IOC控制反转模式是对DIP(依赖倒置原则)的一种实现。IOC指的是一种框架或运行时的编程风格，用来控制程序流程。<br/>
-    **Inversion of Control 控制反转**，将控制权进行反转，将本由自身控制的对象初始化交由外部IoC容器进行初始化；
+     **Inversion of Control 控制反转**，将控制权进行反转，将本由自身控制的对象初始化交由外部IoC容器进行初始化；
 
 **现在我们使用其他的IoC容器框架来替换默认的内置IoC，这里选择使用Autofac框架**
 
@@ -230,4 +230,5 @@ static void Main(string[] args)
 2. [AutoFac 框架初识与应用](https://www.cnblogs.com/i3yuan/p/14654547.html)
 3. [Autofac详解](https://admans.blog.csdn.net/article/details/125736127?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-125736127-blog-79784947.235%5Ev38%5Epc_relevant_default_base3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-125736127-blog-79784947.235%5Ev38%5Epc_relevant_default_base3&utm_relevant_index=3)
 4. [什么是依赖注入(DI)和控制反转(IOC)](https://www.cnblogs.com/sheng-jie/p/6512909.html)
+5. [.Net Core中Autofac的使用方法](https://blog.csdn.net/xiaouncle/article/details/88701770?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-88701770-blog-125736127.235%5Ev38%5Epc_relevant_default_base3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-88701770-blog-125736127.235%5Ev38%5Epc_relevant_default_base3&utm_relevant_index=2)
 
