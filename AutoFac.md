@@ -49,25 +49,23 @@ IPhone phone = container.Resolve<IPhone>();
 
 #### 注册程序集
 
-- RegisterAssemblyTypes(程序集数组)，程序集必须是public的
-
-- AsImplementedInterfaces()：表示注册的类型，以接口的方式注册
-
-- PropertiesAutowired()：支持属性注入
-
-- Where：满足条件类型注册
+- RegisterAssemblyTypes() ：接收包含一个或多个程序集的数组作为参数
+- RegisterAssemblyModules() : 接收模块作为参数，进行模块扫描注册
+- PublicOnly() ：指定公有方法被注册
+- Where() ：要过滤注册的类型
+- Except() ：要排除的类型
+- As() ：反射出其实现的接口
+- AsImplementedInterfaces() ： 自动以其实现的所有接口类型暴露（包括IDisposable接口）
 
 ```c#
-var basePath = AppContext.BaseDirectory;
-var dll = Path.Combine(basePath, "MyAutofac.dll");
-ContainerBuilder containerBuilder = new ContainerBuilder();
-var assemblysServices = Assembly.LoadFrom(dll);
-containerBuilder.RegisterAssemblyTypes(assemblysServices)
-    .Where(t => !t.Name.EndsWith("XXX"))
-    .AsImplementedInterfaces()
-    .PropertiesAutowired();                        
-IContainer container = containerBuilder.Build();
-ITeacher teacher = container.Resolve<ITeacher>();
+var assemblies = Assembly.GetExecutingAssembly();
+
+builder.RegisterAssemblyTypes(assemblies)//程序集内所有具象类 
+.Where(c => c.Name.EndsWith("Service"))
+.PublicOnly()//只要public访问权限的
+.Where(cc => cc.IsClass)//只要class型（主要为了排除值和interface类型） 
+.AsImplementedInterfaces();//自动以其实现的所有接口类型暴露（包括IDisposable接口）
+
 ```
 ---
 
@@ -121,3 +119,5 @@ ITeacher teacher = container.Resolve<ITeacher>();
 ```
 
 ### 生命周期
+
+![image-20210410161115561](https://github.com/hylsss/CodeRecord/assets/62007319/e8cac6b5-aa8a-4692-bac7-4c9ab81c22cc)
