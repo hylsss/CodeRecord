@@ -58,7 +58,7 @@ public  class Club
 
     public string History { get; set; }
   
-    //定义了一个名为League的League类型属性，表示与League实体的关联。//
+    //定义了一个名为League的League类型属性，表示与League实体的关联
     public League League { get; set; }
     //定义了一个名为Players的List<Player>类型属性，表示与Player实体的关联。
     public List<Player> Players { get; set; }
@@ -72,59 +72,38 @@ public  class Club
 
 现在在上面的模型基础上，我们在建立一个比赛（Game）模型。一个队员可以对应多场比赛，一场比赛可以由多个队员参加，这种多对多的关系，EF Core是实现不了的，此时我们可以通过加入一个中间表`GamePlayer`来间接的去实现多对多的关系，一个队员可以参加多场比赛也就是对应多个`GamePlayer`而一场比赛又可以由多个队员参加相当于对应多个`GamePlayer`，此时就间接的实现了多对多的关系。  
 ```c#
- public class Game
+public class Game
+{
+    public Game() 
     {
-        public Game() 
-        {
-            GamePlayers = new List<GamePlayer>();
-
-        }
-
-
-        // 约定 取名叫ID的都是主键。或者加【key】
-        public int Id { get; set; }
-        [Display(Name ="场数")]
-        public int Round { get; set; }
-        [Display(Name = "开赛时间")]  //加问好表示对应的数据库中的字段是可空的 DateTimeOffset是值类型
-        public DateTimeOffset? StarTime { get; set; }
-
-        public List<GamePlayer> GamePlayers { get; set; }
+        GamePlayers = new List<GamePlayer>();
 
     }
 
-  public class GamePlayer
-    {
-        //GamePlayer的主键在DBContext文件中OnModelCreating方法中设置
-        public int PlayerId { get; set; }
 
-        public int GameId { get; set; }
+    // 约定 取名叫ID的都是主键。或者加【key】
+    public int Id { get; set; }
+    [Display(Name ="场数")]
+    public int Round { get; set; }
+    [Display(Name = "开赛时间")]  //加问好表示对应的数据库中的字段是可空的 DateTimeOffset是值类型
+    public DateTimeOffset? StarTime { get; set; }
 
+    public List<GamePlayer> GamePlayers { get; set; }
+}
 
+public class GamePlayer
+{
+    //GamePlayer的主键在DBContext文件中OnModelCreating方法中设置
+    public int PlayerId { get; set; }
 
-        //在GamePlayer中体现一对多的关系   一场比赛有多个队员  一个队员参加多场比赛
-        public Game Game { get; set; }
+    public int GameId { get; set; }
 
-        public Player Player { get; set; }
-    }
+    //在GamePlayer中体现一对多的关系   一场比赛有多个队员  一个队员参加多场比赛
+    public Game Game { get; set; }
 
-  public  class Player
-    {
+    public Player Player { get; set; }
+}
 
-        public Player() 
-        {
-            //初始化，防止出现空引用异常
-            GamePlayers = new List<GamePlayer>();
-        }
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
-
-        //=====导航属性
-        public List<GamePlayer> GamePlayers { get; set; }
-
-    }
 
 ```
 
@@ -136,6 +115,24 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
     //设置联合主键GamePlayer的主键=PlayerId+GameId
     //如果主键由多个属性组成，则指定一个匿名类型，包括属性 (post = > new {post.Title,post.BlogId}) 。
     modelBuilder.Entity<GamePlayer>().HasKey(x=>new { x.PlayerId,x.GameId});
+}
+
+public  class Player
+{
+    public Player() 
+    {
+        //初始化，防止出现空引用异常
+        GamePlayers = new List<GamePlayer>();
+    }
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public DateTime DateOfBirth { get; set; }
+
+    //导航属性
+    public List<GamePlayer> GamePlayers { get; set; }
+
 }
 
 ```
