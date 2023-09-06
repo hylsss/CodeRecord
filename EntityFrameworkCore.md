@@ -263,7 +263,32 @@ public class Blog
 }
 ```
 
+#### 分组配置
 
+为了减小 `OnModelCreating` 方法的大小，可以将实体类型的所有配置提取到实现 [IEntityTypeConfiguration](https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.entityframeworkcore.ientitytypeconfiguration-1) 的单独类中。
+
+```c#
+public class BlogEntityTypeConfiguration : IEntityTypeConfiguration<Blog>
+{
+    public void Configure(EntityTypeBuilder<Blog> builder)
+    {
+        builder
+            .Property(b => b.Url)
+            .IsRequired();
+    }
+}
+
+//然后，只需从 OnModelCreating 调用 Configure 方法
+new BlogEntityTypeConfiguration().Configure(modelBuilder.Entity<Blog>());
+```
+
+#### 应用程序集中的所有配置
+
+可以在给定程序集中应用实现 `IEntityTypeConfiguration` 的类型中指定的所有配置。
+
+```c#
+modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogEntityTypeConfiguration).Assembly);
+```
 
 
 
