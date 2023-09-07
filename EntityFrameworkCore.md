@@ -25,41 +25,43 @@ Entity Framework Core能把C#里的类映射到数据库里的表，然后属性
 public class League
 {
     public int Id { get; set; }
-    [MaxLength(100)]  //最大长度为100
+
+    [MaxLength(100)]  // 最大长度为100
     public string Name { get; set; }
-    [Required,MaxLength(50)] //Required为必填
+
+    [Required, MaxLength(50)]  // Required为必填
     public string Country { get; set; }
 }
 
-public  class Player
+public class Player
 {
     public int Id { get; set; }
-
     public string Name { get; set; }
-
     public DateTime DateOfBirth { get; set; }
-
 }
-//在Club看出关联
-public  class Club
+
+// 在Club看出关联
+public class Club
 {
-    public Club() 
+    public Club()
     {
+        // 初始化，防止出现空引用异常
         Players = new List<Player>();
     }
 
     public int Id { get; set; }
-
     public string Name { get; set; }
-
     public string City { get; set; }
-    [Column(TypeName="date")]//声明后数据库中该字段对应的类型就为date
+
+    [Column(TypeName = "date")]  // 声明后数据库中该字段对应的类型就为date
     public DateTime DateOfEstablishment { get; set; }
 
     public string History { get; set; }
-    //定义了一个名为League的League类型属性，表示与League实体的关联
+
+    // 定义了一个名为League的League类型属性，表示与League实体的关联
     public League League { get; set; }
-    //定义了一个名为Players的List<Player>类型属性，表示与Player实体的关联。
+
+    // 定义了一个名为Players的List<Player>类型属性，表示与Player实体的关联。
     public List<Player> Players { get; set; }
 }
 
@@ -73,16 +75,19 @@ public  class Club
 ```c#
 public class Game
 {
-    public Game() 
+    public Game()
     {
+        // 初始化，防止出现空引用异常
         GamePlayers = new List<GamePlayer>();
     }
 
-    // 约定 取名叫ID的都是主键。或者加【key】
+    // 约定：取名叫ID的都是主键。或者加【key】
     public int Id { get; set; }
-    [Display(Name ="场数")]
+
+    [Display(Name = "场数")]
     public int Round { get; set; }
-    [Display(Name = "开赛时间")]  //加问好表示对应的数据库中的字段是可空的 DateTimeOffset是值类型
+
+    [Display(Name = "开赛时间")]  // 加问号表示对应的数据库中的字段是可空的，DateTimeOffset是值类型
     public DateTimeOffset? StarTime { get; set; }
 
     public List<GamePlayer> GamePlayers { get; set; }
@@ -90,16 +95,14 @@ public class Game
 
 public class GamePlayer
 {
-    //GamePlayer的主键在DBContext文件中OnModelCreating方法中设置
+    // GamePlayer的主键在DBContext文件中OnModelCreating方法中设置
     public int PlayerId { get; set; }
-
     public int GameId { get; set; }
-    //在GamePlayer中体现一对多的关系   一场比赛有多个队员  一个队员参加多场比赛
-    public Game Game { get; set; }
 
+    // 在GamePlayer中体现一对多的关系：一场比赛有多个队员，一个队员参加多场比赛
+    public Game Game { get; set; }
     public Player Player { get; set; }
 }
-
 
 ```
 
@@ -108,26 +111,25 @@ GamePlayer添加联合主键,在DBContext文件中OnModelCreating方法中设置
 ```c#
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
-    //设置联合主键GamePlayer的主键=PlayerId+GameId
-    //如果主键由多个属性组成，则指定一个匿名类型，包括属性 (post = > new {post.Title,post.BlogId}) 。
-    modelBuilder.Entity<GamePlayer>().HasKey(x=>new { x.PlayerId,x.GameId});
+    // 设置联合主键 GamePlayer 的主键 = PlayerId + GameId
+    // 如果主键由多个属性组成，则指定一个匿名类型，包括属性 (post => new {post.Title, post.BlogId})。
+    modelBuilder.Entity<GamePlayer>().HasKey(x => new { x.PlayerId, x.GameId });
 }
 
-public  class Player
+public class Player
 {
-    public Player() 
+    public Player()
     {
-        //初始化，防止出现空引用异常
+        // 初始化，防止出现空引用异常
         GamePlayers = new List<GamePlayer>();
     }
+
     public int Id { get; set; }
-
     public string Name { get; set; }
-
     public DateTime DateOfBirth { get; set; }
-    //导航属性
-    public List<GamePlayer> GamePlayers { get; set; }
 
+    // 导航属性
+    public List<GamePlayer> GamePlayers { get; set; }
 }
 
 ```
@@ -135,18 +137,17 @@ public  class Player
 #### 一对一关系
 
 ```c#
- public class Resume
- {
-     public int Id { get; set; }
+public class Resume
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
 
-     public string Description { get; set; }
-     //相当于球员表的外建，与Player类的Id字段关联。
-     public int PlayerId { get; set; }
-     //导航属性
-     public Player Player { get; set; }
+    // 相当于球员表的外键，与Player类的Id字段关联。
+    public int PlayerId { get; set; }
 
- }
-
+    // 导航属性
+    public Player Player { get; set; }
+}
 
 public class Player
 {
@@ -161,10 +162,11 @@ public class Player
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     modelBuilder.Entity<Resume>()
-        .HasOne(p => p.Player)//这句话意思就是一份简历对应一个球员
-        .WithOne(r => r.Resume)//一个球员又带着一份简历
-        .HasForeignKey<Resume>(r => r.PlayerId);//这句话意思就是一份简历有一个外键关联着PlayerId
+        .HasOne(p => p.Player)  // 这句话意思就是一份简历对应一个球员
+        .WithOne(r => r.Resume)  // 一个球员又带着一份简历
+        .HasForeignKey<Resume>(r => r.PlayerId);  // 这句话意思就是一份简历有一个外键关联着PlayerId
 }
+
 ```
 
 这里`Entity`里面依赖的实体不管是`Resume`还是`Player`都可以，如果是`Player`把对应的关系换一下就可以。这样一对一的关系就建立完成。
@@ -176,24 +178,25 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 ##### `ApplicationDbContext `类必须公开具有 `DbContextOptions` 参数的公共构造函数。 这是将` AddDbContext `的上下文配置传递到 DbContext 的方式。
 
 ```c#
-public BloggingContext(DbContextOptions<BloggingContext> options) : base(options)
+public class BloggingContext : DbContext
 {
+    public BloggingContext(DbContextOptions<BloggingContext> options) : base(options)
+    {
+    }
 }
 
-//BloggingDbContext可以通过构造函数注入在 ASP.NET Core 控制器或其他服务中使用
+// BloggingDbContext 可以通过构造函数注入在 ASP.NET Core 控制器或其他服务中使用
 [ApiController]
 [Route("api/[controller]")]
 public class HomeController : Controller
 {
     private readonly BloggingContext _context;
-            
-    public  HomeController(BloggingContext context)
+
+    public HomeController(BloggingContext context)
     {
         _context = context;
     }
 }
-
-
 
 ```
 
