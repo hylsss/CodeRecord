@@ -31,15 +31,15 @@ public class League
     public string Country { get; set; }
 }
 
- public  class Player
- {
-     public int Id { get; set; }
+public  class Player
+{
+    public int Id { get; set; }
 
-     public string Name { get; set; }
+    public string Name { get; set; }
 
-     public DateTime DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
 
- }
+}
 //在Club看出关联
 public  class Club
 {
@@ -57,7 +57,6 @@ public  class Club
     public DateTime DateOfEstablishment { get; set; }
 
     public string History { get; set; }
-  
     //定义了一个名为League的League类型属性，表示与League实体的关联
     public League League { get; set; }
     //定义了一个名为Players的List<Player>类型属性，表示与Player实体的关联。
@@ -77,9 +76,7 @@ public class Game
     public Game() 
     {
         GamePlayers = new List<GamePlayer>();
-
     }
-
 
     // 约定 取名叫ID的都是主键。或者加【key】
     public int Id { get; set; }
@@ -97,7 +94,6 @@ public class GamePlayer
     public int PlayerId { get; set; }
 
     public int GameId { get; set; }
-
     //在GamePlayer中体现一对多的关系   一场比赛有多个队员  一个队员参加多场比赛
     public Game Game { get; set; }
 
@@ -129,7 +125,6 @@ public  class Player
     public string Name { get; set; }
 
     public DateTime DateOfBirth { get; set; }
-
     //导航属性
     public List<GamePlayer> GamePlayers { get; set; }
 
@@ -183,7 +178,6 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 ```c#
 public BloggingContext(DbContextOptions<BloggingContext> options) : base(options)
 {
-        
 }
 
 //BloggingDbContext可以通过构造函数注入在 ASP.NET Core 控制器或其他服务中使用
@@ -191,7 +185,6 @@ public BloggingContext(DbContextOptions<BloggingContext> options) : base(options
 [Route("api/[controller]")]
 public class HomeController : Controller
 {
-
     private readonly BloggingContext _context;
             
     public  HomeController(BloggingContext context)
