@@ -96,4 +96,8 @@ public async Task<int> CreatAsync(Person person, CancellationToken cancellationT
 
 ##### 资料参考
 
-[Lizzie学习笔记](https://github.com/DOGGIE4/desktop-tutorial/blob/main/Mediator%20Learn.md)
+-  [Lizzie学习笔记](https://github.com/DOGGIE4/desktop-tutorial/blob/main/Mediator%20Learn.md)
+-  [Mediator.Net github](https://github.com/mayuanyang/Mediator.Net)
+
+
+
