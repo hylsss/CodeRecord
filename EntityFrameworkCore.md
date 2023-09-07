@@ -31,15 +31,15 @@ public class League
     public string Country { get; set; }
 }
 
- public  class Player
- {
-     public int Id { get; set; }
+public  class Player
+{
+    public int Id { get; set; }
 
-     public string Name { get; set; }
+    public string Name { get; set; }
 
-     public DateTime DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
 
- }
+}
 //在Club看出关联
 public  class Club
 {
