@@ -8,10 +8,13 @@
 - 将查询结果去重distinct
 - 最后合并各组的查询结果，按照order by的条件进行排序
 
+![微信图片_20231010195233](https://github.com/hylsss/CodeRecord/assets/62007319/c9a36c83-9ba7-4b0c-b80e-62e6ba6590f5)
+
 
 
 以员工表和薪资表为例
 
+![640](https://github.com/hylsss/CodeRecord/assets/62007319/c7a8b332-51cb-46df-9d49-525b49a40788)
 
 
 
@@ -52,7 +55,6 @@ WHERE department IN ('IT', 'Finance')
 GROUP BY department
 HAVING AVG(salary) > 50000;
 
-
 //查询的结果会返回那些在 "IT" 和 "Finance" 部门中，平均薪水超过 50000 的部门名称和它们的平均薪水。
 ```
 
@@ -61,29 +63,34 @@ HAVING AVG(salary) > 50000;
 ```sql
 // 选择指定的列
 SELECT column1 ,column2 FROM table_name
+
 // 选择所有的列
 SELECT * FROM table_name
+
 // DISTINCT: 这个关键字确保查询结果中的每个 id 值都是唯一的，即它会去除任何重复的 id 值。
 SELECT DISTINCT employee.id FROM employee
+
 // 只有满足条件的记录才会被选中,where在这里用来过滤结果
 SELECT column1,column2 FROM table_name WHERE condition
+
 // ORDER BY 子句用于对结果进行排序。默认是升序 (ASC)，如果想要降序可以使用 DESC。
 SELECT column1,column2 FROM table_name ORDER BY column1 , columm2 ASC;
 ```
 
+![微信图片_20231010195223](https://github.com/hylsss/CodeRecord/assets/62007319/eb1c0451-1c0f-4ce3-82a8-97103aff55ad)
+
 #### limit
 
-``OFFSET` 关键字用于指定开始选择记录的位置
-
+`OFFSET` 关键字用于指定开始选择记录的位置
 ```sql
 // 返回前n条数据
 SELECT column1 ,column2 FROM table_name LIMIT number;
+
 //LIMIT 5 OFFSET 10 会跳过前 10 条记录，并返回接下来的 5 条记录。
 SELECT column1,column2 FROM table_name LIMIT number OFFSET number; 
 ```
-
 **常见用途**:
-
 - **分页**: 当你有大量数据需要在网页上分页显示时，`LIMIT` 和 `OFFSET` 可以帮助你每次只获取一页的数据。
 - **随机样本**: 在某些数据库系统中，你可以结合 `ORDER BY` 使用 `LIMIT` 来获取随机样本。例如：`SELECT column FROM table_name ORDER BY RAND() LIMIT 5;`。
+
 
