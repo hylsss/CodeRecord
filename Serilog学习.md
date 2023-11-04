@@ -78,3 +78,6 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 | Error       | 第五级，记录程序运行的错误日志           |
 | Fatal       | 第六级，记录程序运行中发生致命错误的日志 |
 
+log 出来的记录
+![673bdf873ef864657c08c994eceae04](https://github.com/hylsss/CodeRecord/assets/62007319/f08f14f0-ea19-47bc-b6f8-3e0d114a34b1)
+
