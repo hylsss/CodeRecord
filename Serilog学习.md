@@ -35,7 +35,9 @@ http://localhost:5341
 2. **日志输出到文件**，需要安装`Serilog.Sinks.File`包
 
 #### 配置Serilog
-在Program的Main方法中配置Serilog
+##### 在Program的Main方法中配置Serilog
+
+日志输出到控制台
 
 ```c#
          Log.Logger = new LoggerConfiguration()
@@ -51,7 +53,49 @@ http://localhost:5341
             .WriteTo.Seq("http://localhost:5341")
             .CreateLogger();
 ```
-在程序入口Program类的IHostBuilder函数启用Serilog
+输出本地日志文件
+
+```c#
+Log.Logger = new LoggerConfiguration()
+  .MinimumLevel.Debug()
+  .WriteTo.Console()
+  .WriteTo.File("00_Logs//log.log",
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: SerilogOutputTemplate,
+                retainedFileCountLimit: 31,
+                retainedFileTimeLimit: TimeSpan.FromDays(2),
+                rollOnFileSizeLimit: true,
+                fileSizeLimitBytes: 52428800 // 50MB
+                )
+  .CreateLogger();
+
+//简洁版本
+  Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft",
+             LogEventLevel.Information)
+            .MinimumLevel.Override("IdentityServer4",
+              LogEventLevel.Information)
+            .MinimumLevel.Override("Hangfire",   
+             LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File("00_Logs//log.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+```
+
+WriteTo.File详解（日志默认路径为当前程序路径）
+
+- path：默认路径是程序的bin目录+path参数，当然也可以写绝对路径，只需要写入参数就可以了
+- rollingInterval：创建文件的类别，可以是分钟，小时，天，月。 此参数可以让创建的log文件名 + 时间。例如log20191219.log
+- outputTemplate：日志模板，可以自定义
+- retainedFileTimeLimit：日志保存时间，删除过期日志
+- retainedFileCountLimit：设置日志文件个数最大值，默认31，意思就是只保留最近的31个日志文件,等于null时永远保留文件
+- rollOnFileSizeLimit： 是否限制单个文件的最大大小
+- fileSizeLimitBytes： 单个文件最大长度
+
+##### 在程序入口Program类的IHostBuilder函数启用Serilog
+
 ```C#
 public static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
@@ -61,6 +105,26 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
             webBuilder.UseStartup<Startup>();
         });
 ```
+##### 还有一个Startup.cs，用于配置中间件管道，Configure如下所示
+
+RequestLoggingMiddleware被包含在Serilog.AspNetCore中，可以被用于为每个请求添加一个单一的“摘要”日志消息。如果您已经完成了上一节中的步骤，则添加这个中间件将变得很简单。在您的Startup类中，在您想要记录日志的位置使用UseSerilogRequestLogging()进行调用
+
+```c#
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseSerilogRequestLogging();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseEndpoints(enpoint => enpoint.MapControllers());
+    }
+```
+与ASP.NET Core的中间件管道一样，顺序很重要。当请求到达RequestLoggingMiddleware中间件时，它将启动计时器，并将请求传递给后续中间件进行处理。当后面的中间件最终生成响应（或抛出异常），则响应通过中间件管道传递回到请求记录器，并在其中记录了结果并写入概要日志信息。
+
+Serilog只能记录到达中间件的请求。在上面的例子中，我已经在StaticFilesMiddleware之后添加了RequestLoggingMiddleware 。因此如果请求被UseStaticFiles处理并使管道短路的话，日志将不会被记录。鉴于静态文件中间件非常嘈杂，而且通常这是人们期望的行为（静态文件进行短路，不需要进行记录），但是如果您也希望记录对静态文件的请求，则可以在管道中serilog中间件移动到更早的位置。
+
 
 -  **MinimumLevel** 设置日志级别的最小级别为 `Debug`，这意味着 Debug、Information、Warning 和 Error 级别的日志消息都会被记录。
 -  添加**MinimalLevel.Override **项，可以覆盖某些特定命名空间的最小级别。.MinimumLevel.Override("Microsoft", LogEventLevel.Information) 和.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)，在这种情况下，对于以 "Microsoft" 或 "Microsoft.AspNetCore" 开头的日志消息，将分别使用 Information 和 Warning 级别。
@@ -78,6 +142,45 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 | Error       | 第五级，记录程序运行的错误日志           |
 | Fatal       | 第六级，记录程序运行中发生致命错误的日志 |
 
-log 出来的记录
+#### appsettings.json的配置
+修改`appsettings.json`，向 WriteTo 下的 RollingFile 对象节点的 Args 添加一个 outputTemplate 选项，以 自定义输出消息模板 ：
+```c#
+ "Args": {
+    "pathFormat": "Logs\\{HalfHour}.log",
+    "outputTemplate": "{Timestamp:o} [{Level:u3}] ({MachineName}/{ProcessId}/{ProcessName}/{ThreadId}) {Message}{NewLine}{Exception}"
+  }
+```
+向 Serilog 配置对象添加 Enrich 配置节点，以丰富日志事件的信息.
+```c#
+"Enrich": [
+  "WithMachineName",
+  "WithProcessId",
+  "WithProcessName",
+  "WithThreadId"
+]
+```
+
+将日志保存到数据库
+修改 appsettings.json，在 Serilog 配置中的 WriteTo 节点下添加以下配置节点，以向 SQLite 输出日志：
+
+```c#
+ "Args": {
+    "sqliteDbPath": "Logs\\log.db",
+    "tableName": "Logs",
+    "maxDatabaseSize": 1,
+    "rollOver": true
+  }
+```
+-  sqliteDbPath： SQLite 数据库的路径。
+-  tableName： 用于存储日志的 SQLite 表的名称。
+-  maxDatabaseSize： 数据库的最大文件大小，可以以 MB 为单位增加。默认为 10MB，最大为 20GB。为了方便测试，我在这里将其设置为 1MB。
+-  rollOver： 如果文件大小超过最大数据库文件大小，则创建滚动备份，默认为 true。
+
+
+
+浏览器log 出来的记录
 ![673bdf873ef864657c08c994eceae04](https://github.com/hylsss/CodeRecord/assets/62007319/f08f14f0-ea19-47bc-b6f8-3e0d114a34b1)
 
+```
+
+```
