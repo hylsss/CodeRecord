@@ -181,6 +181,5 @@ Serilog只能记录到达中间件的请求。在上面的例子中，我已经�
 浏览器log 出来的记录
 ![673bdf873ef864657c08c994eceae04](https://github.com/hylsss/CodeRecord/assets/62007319/f08f14f0-ea19-47bc-b6f8-3e0d114a34b1)
 
-```
-
-```
+输出本地日志文件
+![1699172049516](https://github.com/hylsss/CodeRecord/assets/62007319/9b2158cf-2b10-4fa7-a078-9a2d70a84fdc)
